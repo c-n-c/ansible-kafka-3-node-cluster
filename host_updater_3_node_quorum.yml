@@ -1,18 +1,18 @@
 ---
 - name: host file update - Quorum Prerequisite
   hosts: zookeeper
-  gather_facts: yes
+  gather_facts: true
   tasks:
     - name: Update the /etc/hosts file with node name
       tags: etchostsupdate
-      become: yes
+      become: true
       become_user: root
       lineinfile:
         path: "/etc/hosts"
         regexp: ".*\t{{ hostvars[item]['inventory_hostname']}}"
         line: "{{ hostvars[item]['ansible_eth1']['ipv4']['address'] }}\t{{ hostvars[item]['inventory_hostname']}}"
         state: present
-        backup: yes
+        backup: true
       register: etchostsupdate
       when: ansible_hostname != "{{ item }}" or ansible_hostname == "{{ item }}"
       with_items: "{{groups['zookeeper']}}"
